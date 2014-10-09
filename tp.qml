@@ -11,18 +11,17 @@ PageStackWindow {
   property int diff
 
   function toggle() {
-     if (status == "running") {
-       status = "stopped"
-       button.color = "green"
-       button.text = "start"
-     } else {
-       status = "running"
-       button.color = "red"
-       button.text = "stop"
-     }
-     time.text = status
-     app.log(status)
+    if (status == "running") { status = "stopped" } else { status = "running" }
   }
+
+  onStatusChanged: {
+    if (status == "stopped") { timer.stop() }
+    else { timer.start() }
+    app.log(status)
+    button.update()
+  }
+
+  onDiffChanged: { time.update() }
 
   Page {
 
@@ -32,28 +31,44 @@ PageStackWindow {
 
     Text {
       id: time
-      text: 'test'
+      text: app.diff
+      font.family: "Courier"
       font.pointSize: 48
+      anchors.horizontalCenter: parent.horizontalCenter
+      function pad(i) { return ('0'+i).slice(-2) } 
+      function update() {
+          var h = ~~(app.diff/3600)
+          var m = ~~((app.diff-h*3600)/60)
+          var s = Math.round(app.diff - h*3600 - m*60)
+          text = pad(h)+":"+pad(m)+":"+pad(s)
+          if (app.diff > 0) { color = "red" } else { color = "green" }
+      }
     }
 
     Timer {
-      id: textTimer
+      id: timer
       interval: 1000
       repeat: true
-      running: true
+      running: false
       triggeredOnStart: true
-      onTriggered: {
-        //appWindow.seconds++;
-        // time.text = Date();
-        //time.text = appWindow.seconds;
-      }
+      
+      onTriggered: { app.diff++ }
     }
 
     Text {
       id: button
-      text: app.status
-      anchors.centerIn:  parent
       font.pointSize: 120
+      anchors.centerIn:  parent
+      
+      function update() {
+        if (app.status == "running") {
+          color = "red"
+          text = "stop"
+        } else {
+          color = "green"
+          text = "start"
+        }
+      }
     }
   }
 }
