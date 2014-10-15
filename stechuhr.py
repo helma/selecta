@@ -1,21 +1,17 @@
 import sys
 import csv
 import datetime
+import atexit
 from dateutil import parser
 from PySide.QtCore import *
 from PySide.QtGui import *
 from PySide.QtDeclarative import QDeclarativeView
- 
-def log(status):
+
+def save():
   now = datetime.datetime.now()
   with open("/home/user/stechuhr/log", "a") as f:
-    if status == "running":
-      f.write(str(now))
-      f.flush()
-    else:
-      f.write(", "+str(now)+"\n")
-      f.flush()
-
+    f.write(", "+str(now)+"\n")
+    f.flush()
 
 dur = datetime.timedelta(seconds=0)
 logstart = None
@@ -25,12 +21,11 @@ for row in csv.reader(open("/home/user/stechuhr/log", 'rb')):
   if logstart is None:
     logstart = parser.parse(row[0])
 
-  if len(row) == 1:
-    status = "running"
-    dur += now - parser.parse(row[0])
-  else:
-    status = "stopped"
-    dur += parser.parse(row[1])-parser.parse(row[0])
+  dur += parser.parse(row[1])-parser.parse(row[0])
+
+with open("/home/user/stechuhr/log", "a") as f:
+  f.write(str(now))
+  f.flush()
 
 # 246 business days/year
 # 5 weeks vacation
@@ -46,9 +41,8 @@ view.setViewport(QWidget())
 view.setSource(QUrl("/home/user/stechuhr/stechuhr.qml"))
 view.showFullScreen()
 root = view.rootObject()
-root.setProperty("status",status)
 root.setProperty("diff",diff)
-root.log.connect(log)
+atexit.register(save)
 
 # Enter Qt main loop
 sys.exit(app.exec_())
