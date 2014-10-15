@@ -1,6 +1,3 @@
-# TODO
-# fix log nowline/status when stopped running
-# icon
 import sys
 import csv
 import datetime
@@ -11,17 +8,19 @@ from PySide.QtDeclarative import QDeclarativeView
  
 def log(status):
   now = datetime.datetime.now()
-  with open("log", "a") as f:
+  with open("/home/user/stechuhr/log", "a") as f:
     if status == "running":
       f.write(str(now))
+      f.flush()
     else:
       f.write(", "+str(now)+"\n")
+      f.flush()
 
 
 dur = datetime.timedelta(seconds=0)
 logstart = None
 now = datetime.datetime.now()
-for row in csv.reader(open("log", 'rb')):
+for row in csv.reader(open("/home/user/stechuhr/log", 'rb')):
 
   if logstart is None:
     logstart = parser.parse(row[0])
@@ -44,7 +43,7 @@ diff = (dur.days*1440*60+dur.seconds) - planned_seconds
 app = QApplication(sys.argv)
 view = QDeclarativeView()
 view.setViewport(QWidget())
-view.setSource(QUrl("/home/user/MyDocs/tp/tp.qml"))
+view.setSource(QUrl("/home/user/stechuhr/stechuhr.qml"))
 view.showFullScreen()
 root = view.rootObject()
 root.setProperty("status",status)
