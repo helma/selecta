@@ -24,11 +24,12 @@ PageStackWindow {
       anchors.centerIn:  parent
       function pad(i) { return ('0'+i).slice(-2) } 
       function update() {
-          var h = ~~(app.diff/3600)
-          var m = ~~((app.diff-h*3600)/60)
-          var s = Math.round(app.diff - h*3600 - m*60)
+          var total = Math.abs(app.diff)
+          var h = parseInt(total/3600)%24
+          var m = parseInt(total/60)%60
+          var s = total%60
           text = pad(h)+":"+pad(m)+":"+pad(s)
-          if (app.diff > 0) { color = "red" } else { color = "green" }
+          if (app.diff > 0) { color = "red" } else { color = "green"; text = "-"+text }
       }
     }
 
