@@ -1,7 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Type=Application
-Name=Stechuhr
-Exec=/usr/bin/aegis-exec -s -u user /usr/bin/python /home/user/stechuhr/stechuhr.py
-Icon=/home/user/stechuhr/stechuhr.png
-X-Desktop-File-Install-Version=0.15
