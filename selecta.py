@@ -6,6 +6,7 @@ import pyotherside
 
 
 inbox = '/home/nemo/Music/INBOX'
+#media/sdcard/9016-4EF8/Music/
 
 def playlist():
 

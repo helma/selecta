@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/lib/qt5/bin/qmlscene /home/nemo/src/selecta/selecta.qml
