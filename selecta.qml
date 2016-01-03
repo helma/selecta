@@ -82,6 +82,10 @@ ApplicationWindow {
     }
   }
 
+  Component.onCompleted: { 
+    DisplayBlanking.preventBlanking = true
+  }
+
   cover: Cover {
 
     Text {
